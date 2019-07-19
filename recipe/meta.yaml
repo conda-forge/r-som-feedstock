@@ -43,14 +43,10 @@ test:
 about:
   home: https://CRAN.R-project.org/package=som
   license: GPL (>= 3)
+  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
   summary: Self-Organizing Map (with application in gene clustering).
   license_family: GPL3
 
 extra:
   recipe-maintainers:
     - conda-forge/r
-    - dpryan79
-    - johanneskoester
-    - bgruening
-    - daler
-    - jdblischak
