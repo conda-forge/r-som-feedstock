@@ -5,7 +5,7 @@ Home: https://CRAN.R-project.org/package=som
 
 Package license: GPL (>= 3)
 
-Feedstock license: BSD 3-Clause
+Feedstock license: BSD-3-Clause
 
 Summary: Self-Organizing Map (with application in gene clustering).
 
