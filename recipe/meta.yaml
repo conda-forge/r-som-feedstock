@@ -1,5 +1,4 @@
 {% set version = '0.3-5.1' %}
-
 {% set posix = 'm2-' if win else '' %}
 {% set native = 'm2w64-' if win else '' %}
 
@@ -8,44 +7,48 @@ package:
   version: {{ version|replace("-", "_") }}
 
 source:
-  fn: som_{{ version }}.tar.gz
   url:
-    - https://cran.r-project.org/src/contrib/som_{{ version }}.tar.gz
-    - https://cran.r-project.org/src/contrib/Archive/som/som_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/som_{{ version }}.tar.gz
+    - {{ cran_mirror }}/src/contrib/Archive/som/som_{{ version }}.tar.gz
   sha256: a6f4c0e5b36656b7a8ea144b057e3d7642a8b71972da387a7133f3dd65507fb9
 
 build:
   merge_build_host: True  # [win]
   number: 1004
-  skip: true  # [win32]
-
   rpaths:
     - lib/R/lib/
     - lib/
+
 requirements:
   build:
-    - posix                # [win]
-    - {{ compiler('c') }}        # [unix]
-    - {{ compiler('m2w64_c') }}  # [win]
-    - {{ compiler('cxx') }}        # [unix]
-    - {{ compiler('m2w64_cxx') }}  # [win]
+    - {{ compiler('c') }}              # [not win]
+    - {{ compiler('m2w64_c') }}        # [win]
+    - {{ compiler('cxx') }}            # [not win]
+    - {{ compiler('m2w64_cxx') }}      # [win]
+    - {{ posix }}filesystem        # [win]
+    - {{ posix }}make
+    - {{ posix }}sed               # [win]
+    - {{ posix }}coreutils         # [win]
+    - {{ posix }}zip               # [win]
+    - cross-r-base {{ r_base }}    # [build_platform != target_platform]
   host:
     - r-base
-
   run:
     - r-base
+    - {{ native }}gcc-libs         # [win]
 
 test:
   commands:
-    - $R -e "library('som')"  # [not win]
+    - $R -e "library('som')"           # [not win]
     - "\"%R%\" -e \"library('som')\""  # [win]
 
 about:
   home: https://CRAN.R-project.org/package=som
-  license: GPL (>= 3)
-  license_file: '{{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3'
+  license: GPL-3.0-or-later
   summary: Self-Organizing Map (with application in gene clustering).
   license_family: GPL3
+  license_file:
+    - {{ environ["PREFIX"] }}/lib/R/share/licenses/GPL-3
 
 extra:
   recipe-maintainers:
